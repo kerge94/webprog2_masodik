@@ -1,6 +1,7 @@
 <?php
 
-define('SITE_ROOT', 'http://localhost/webprog/');
+const SITE_ROOT = 'http://localhost/webprog/';
+const VIEW_FOLDER = 'src/Views/';
 
 spl_autoload_register(function ($class) {
     $classPath = str_replace('\\', '/', $class);    
