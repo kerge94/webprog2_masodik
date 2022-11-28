@@ -5,8 +5,13 @@ final class Router
     public function handle(Request $request): void
     {
         [$controllerClass, $method] = $this->splitURI($request->getStrippedURI());
-        $controller = new $controllerClass($request);
-        $controller->$method();
+        try {
+            $controller = new $controllerClass($request);
+            $controller->$method();
+        }
+        catch (Throwable $e) {
+            self::redirect(ERROR_404_PAGE);
+        }        
     }
 
     private function splitURI(string $uri): array
@@ -17,5 +22,11 @@ final class Router
         $controller = "Controllers\\" . ucfirst(array_pop($splittedURI));
 
         return [$controller, $method];
+    }
+
+    public static function redirect(string $to): never
+    {
+        header("Location: /$to");
+        exit;
     }
 }

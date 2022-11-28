@@ -8,7 +8,7 @@
 
     <body>
         <?php include $menu ?>
-        <section>
+        <section class="container my-5">
             <?php include $content ?>
         </section>
         <footer>

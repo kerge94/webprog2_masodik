@@ -5,6 +5,11 @@ const DB_USERNAME = 'root';
 const DB_PASSWORD = '';
 const DB_DATABASE = 'szoftverleltar';
 
+const APP_NAME = 'Szoftver leltár';
+
+const HOME_PAGE = 'home/index';
+const ERROR_404_PAGE = 'error/not_found';
+
 const VIEW_FOLDER = 'src/Views/';
 
 spl_autoload_register(function ($class) {
@@ -14,7 +19,7 @@ spl_autoload_register(function ($class) {
         require $filePath;
     }
     else {
-        die("Class $class not found, searched at $filePath");
+        throw new RuntimeException("Class $class not found, searched at $filePath");
     }
 });
 

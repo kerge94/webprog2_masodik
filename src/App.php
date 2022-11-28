@@ -30,5 +30,5 @@ final class App
     public static function DB(): Database
     {
         return self::$database;
-    }
+    }    
 }

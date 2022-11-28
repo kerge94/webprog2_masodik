@@ -8,6 +8,6 @@ class Home extends BaseController
 {
     public function index(): void
     {
-        View::renderPage('home', ['test_variable' => 'TEST_DATA']);
+        View::renderPage('home', 'Főoldal', ['test_variable' => 'TEST_DATA']);
     }
 }
