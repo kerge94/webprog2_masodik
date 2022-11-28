@@ -21,7 +21,8 @@ class Account extends BaseController
                 $_POST['csaladi_nev'],
                 $_POST['uto_nev'],
                 $_POST['login'],
-                $_POST['jelszo']
+                $_POST['jelszo'],
+                (int)($_POST['admin'] ?? 0)
             );
             $viewData = View::createAlert("Sikeres regisztráció! Bejelentkezhet fiókjába.");
         }

@@ -34,12 +34,12 @@ class User
         session_destroy();
     }
 
-    public static function register(string $firstname, string $lastname, string $login, string $password): void
+    public static function register(string $firstname, string $lastname, string $login, string $password, int $admin): void
     {
         App::DB()->query(
-            "insert into felhasznalok (csaladi_nev, uto_nev, login, jelszo) values (?, ?, ?, ?);",
-            "ssss",
-            [$firstname, $lastname, $login, password_hash($password, PASSWORD_BCRYPT)]
+            "insert into felhasznalok (csaladi_nev, uto_nev, login, jelszo, admin) values (?, ?, ?, ?, ?);",
+            "ssssi",
+            [$firstname, $lastname, $login, password_hash($password, PASSWORD_BCRYPT), $admin]
         );
     }
 
@@ -52,5 +52,18 @@ class User
             return 1;
         }
         return 0;
+    }
+
+    public static function isLoggedIn(): bool
+    {
+        return self::getAccessLevel() > 0;
+    }
+
+    public static function getLoggedInAs(): string
+    {
+        $firstname = $_SESSION['csaladi_nev'];
+        $lastname = $_SESSION['uto_nev'];
+        $login = $_SESSION['login'];
+        return "$firstname $lastname ($login)";
     }
 }

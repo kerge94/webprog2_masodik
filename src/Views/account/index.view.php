@@ -50,6 +50,12 @@
                             <input type="password" class="form-control" id="jelszo" name="jelszo">
                         </div>
                     </div>
+                    <div class="mb-3 row">
+                        <label for="jelszo" class="col-sm-4 col-form-label">Admin fiók</label>
+                        <div class="col-sm-8">
+                            <input class="form-check-input" type="checkbox" value="1" id="admin" name="admin">
+                        </div>
+                    </div>
                     <button type="submit" class="btn btn-secondary">Regisztrálok</button>
                 </form>
             </div>
