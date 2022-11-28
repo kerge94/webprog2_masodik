@@ -8,7 +8,9 @@
 
     <body>
         <?php include $menu ?>
+        
         <section class="container my-5">
+            <?php Models\View::renderView('alert', ['alert' => $alert ?? null]); ?>
             <?php include $content ?>
         </section>
         <footer>

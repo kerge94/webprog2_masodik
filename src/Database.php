@@ -28,8 +28,13 @@ final class Database
         $stmt->bind_param($types, ...$params);
         $stmt->execute();
         $result = $stmt->get_result();
-        $data = $result->fetch_all(MYSQLI_ASSOC);
-        $stmt->close();
-        return $data;
+        if ($result !== false) {
+            $data = $result->fetch_all(MYSQLI_ASSOC);
+            return $data;
+        }        
+  
+        if ($stmt->error) {
+            throw new RuntimeException($stmt->error);
+        }
     }
 }
