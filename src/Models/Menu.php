@@ -16,10 +16,10 @@ class Menu
         );
         foreach ($menuData as $menuItem) {
             if ($menuItem['szulo'] === null) {
-                $result[$menuItem['id']] = $menuItem;
+                $result[$menuItem['id']] = (object)$menuItem;
             }
             else {
-                $result[$menuItem['szulo']]['submenu'][] = $menuItem;
+                $result[$menuItem['szulo']]->children[] = (object)$menuItem;
             }
         }
         return $result;

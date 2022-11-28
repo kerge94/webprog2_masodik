@@ -2,10 +2,12 @@
 
 namespace Controllers;
 
+use Models\View;
+
 class Home extends BaseController
 {
     public function index(): void
     {
-        $this->renderPage('Home', ['test_variable' => 'TEST_DATA']);
+        View::renderPage('home', ['test_variable' => 'TEST_DATA']);
     }
 }
