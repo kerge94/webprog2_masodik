@@ -1,7 +1,9 @@
 <?php
 
-const SITE_ROOT = 'http://localhost/webprog/';
-const VIEW_FOLDER = 'src/Views/';
+const DB_HOST = 'localhost';
+const DB_USERNAME = 'root';
+const DB_PASSWORD = '';
+const DB_DATABASE = 'szoftverleltar';
 
 spl_autoload_register(function ($class) {
     $classPath = str_replace('\\', '/', $class);    
@@ -10,7 +12,7 @@ spl_autoload_register(function ($class) {
         require $filePath;
     }
     else {
-        throw new RuntimeException("Class $class not found, searched at $filePath");
+        die("Class $class not found, searched at $filePath");
     }
 });
 

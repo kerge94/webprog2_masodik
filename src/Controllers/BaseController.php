@@ -6,6 +6,8 @@ use Request;
 
 class BaseController
 {
+    protected const VIEW_FOLDER = 'src/Views/';
+
     protected Request $request;
 
     public function __construct(Request $request)
@@ -16,19 +18,23 @@ class BaseController
     protected function renderView(string $view, array $viewData): void
     {
         extract($viewData);
-        include VIEW_FOLDER . "$view.php";
+        $viewFile = self::VIEW_FOLDER . "$view.php";
+        if (file_exists($viewFile)) {
+            include $viewFile;
+        }
+        else {
+            die("View $viewFile not found");
+        }
     }
 
     protected function renderPage(string $viewToInclude, array $viewData): void
     {
-        $viewData['template'] = VIEW_FOLDER . "$viewToInclude.php";
+        $viewData['template'] = self::VIEW_FOLDER . "$viewToInclude.php";
         $this->renderView('Page', $viewData);
     }
 
     public function test(): void
     {
-        echo '<pre>';
-        var_dump($this->request->getParams());
-        echo '</pre>';
+        $this->renderPage('Test', ['request_params' => $this->request->getParams()]);
     }    
 }

@@ -2,6 +2,11 @@
 
 final class Request
 {
+    public function getHost(): string
+    {
+        return $_SERVER['HTTP_HOST'];
+    }
+
     public function getURI(): string
     {
         return $_SERVER['REQUEST_URI'];
@@ -15,5 +20,11 @@ final class Request
     public function getParams(): array
     {
         return $_REQUEST;
+    }
+
+    public function getStrippedURI(): string
+    {
+        $cleanedURI = strtok($this->getURI(), '?');
+        return trim($cleanedURI, '/');
     }
 }
