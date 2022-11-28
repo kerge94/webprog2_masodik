@@ -9,8 +9,10 @@
     <body>
         <?php include $menu ?>
         <section>
-            <?php include $template ?>
+            <?php include $content ?>
         </section>
-        <?php include $footer ?>
+        <footer>
+
+        </footer>
     </body>
 </html>

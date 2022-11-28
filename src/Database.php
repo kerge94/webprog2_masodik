@@ -24,9 +24,12 @@ final class Database
 
     public function query(string $query, string $types, array $params)
     {
-        $stmt = $conn->prepare($query);
+        $stmt = $this->connection->prepare($query);
         $stmt->bind_param($types, ...$params);
         $stmt->execute();
+        $result = $stmt->get_result();
+        $data = $result->fetch_all(MYSQLI_ASSOC);
         $stmt->close();
+        return $data;
     }
 }

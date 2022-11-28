@@ -5,6 +5,8 @@ const DB_USERNAME = 'root';
 const DB_PASSWORD = '';
 const DB_DATABASE = 'szoftverleltar';
 
+const VIEW_FOLDER = 'src/Views/';
+
 spl_autoload_register(function ($class) {
     $classPath = str_replace('\\', '/', $class);    
     $filePath =  __DIR__ . "/src/$classPath.php";
@@ -16,5 +18,4 @@ spl_autoload_register(function ($class) {
     }
 });
 
-$app = new App();
-$app->run();
+App::run();

@@ -2,15 +2,16 @@
 
 final class App
 {
-    private Router $router;
-    private Request $request;
-    private Database $database;
+    private static Router $router;
+    private static Request $request;
+    private static Database $database;
 
-    public function __construct()
+    private static function init()
     {
-        $this->router = new Router();
-        $this->request = new Request();
-        $this->database = new Database(
+        session_start();
+        self::$router = new Router();
+        self::$request = new Request();
+        self::$database = new Database(
             DB_HOST,
             DB_USERNAME,
             DB_PASSWORD,
@@ -18,10 +19,16 @@ final class App
         );
     }
 
-    public function run()
+    public static function run()
     {
-        $this->router->handle(
-            $this->request
+        self::init();
+        self::$router->handle(
+            self::$request
         );
+    }
+
+    public static function DB(): Database
+    {
+        return self::$database;
     }
 }

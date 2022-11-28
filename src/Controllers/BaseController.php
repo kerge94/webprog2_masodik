@@ -3,11 +3,10 @@
 namespace Controllers;
 
 use Request;
+use Models\Menu;
 
 class BaseController
 {
-    protected const VIEW_FOLDER = 'src/Views/';
-
     protected Request $request;
 
     public function __construct(Request $request)
@@ -18,7 +17,7 @@ class BaseController
     protected function renderView(string $view, array $viewData): void
     {
         extract($viewData);
-        $viewFile = self::VIEW_FOLDER . "$view.php";
+        $viewFile = $this->getViewFile($view);
         if (file_exists($viewFile)) {
             include $viewFile;
         }
@@ -29,8 +28,15 @@ class BaseController
 
     protected function renderPage(string $viewToInclude, array $viewData): void
     {
-        $viewData['template'] = self::VIEW_FOLDER . "$viewToInclude.php";
+        $viewData['menu'] = $this->getViewFile('Menu');
+        $viewData['menu_items'] = Menu::getMenu(3);
+        $viewData['content'] = $this->getViewFile($viewToInclude);
         $this->renderView('Page', $viewData);
+    }
+
+    protected function getViewFile(string $view): string
+    {
+        return VIEW_FOLDER . "$view.php";
     }
 
     public function test(): void
