@@ -22,8 +22,9 @@ class BaseController
         }
     }
 
-    protected function sendJSON(mixed $data): never
+    protected function sendJSON(mixed $data = null, int $responseCode = 200): never
     {
+        http_response_code($responseCode);
         header("Content-Type: application/json; charset=UTF-8");
         echo json_encode($data);
         exit;

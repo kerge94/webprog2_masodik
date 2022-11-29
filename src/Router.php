@@ -10,7 +10,7 @@ final class Router
             self::redirect(HOME_PAGE);
         }
 
-        [$controllerClass, $method] = $this->splitURI($uri);
+        [$controllerClass, $method] = self::splitURI($uri);
         try {
             $controller = new $controllerClass($request);
             $controller->$method();
@@ -23,14 +23,14 @@ final class Router
         }     
     }
 
-    private function splitURI(string $uri): array
+    public static function splitURI(string $uri): array
     {
         $splittedURI = explode('/', $uri);
 
-        $method = array_pop($splittedURI);
-        $controller = "Controllers\\" . ucfirst(array_pop($splittedURI));
+        $controller = "Controllers\\" . ucfirst(array_shift($splittedURI));
+        $method = array_shift($splittedURI);
 
-        return [$controller, $method];
+        return [$controller, $method, $splittedURI];
     }
 
     public static function redirect(string $to): never

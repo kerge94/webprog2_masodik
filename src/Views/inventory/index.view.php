@@ -18,11 +18,9 @@
 
             <button id="query" class="mx-3 btn btn-primary">
                 Lekérdezés
-                <span class="spinner spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
             </button>
             <button id="download" class="btn btn-secondary">
                 Pdf letöltése
-                <span class="spinner spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
             </button>
         </div>
     </div>
@@ -30,7 +28,7 @@
 
 <div id="result" class="row mt-3">
     <div class="col-md-5 offset-md-1 table-wrapper d-none">
-        <table class="table table-striped">
+        <table class="table table-striped table-hover">
             <thead class="thead-dark">
                 <tr>
                     <th scope="col">Szoftver</th>
@@ -48,21 +46,6 @@
 </div>
 
 <script>
-    class Button {
-        constructor(selector, on_click) {
-            this.selector = selector;
-            this.elem = $(selector);
-            this.spinner = this.elem.find('.spinner');
-            $(selector).on('click', async () => {
-                this.elem.prop('disabled', true);
-                this.spinner.removeClass('d-none');
-                await on_click();
-                this.spinner.addClass('d-none');
-                this.elem.prop('disabled', false);
-            });
-        }
-    }
-
     class Table {
         constructor(wrapper_selector) {
             this.wrapper = $(wrapper_selector);
@@ -77,6 +60,11 @@
             this.wrapper.removeClass('d-none');
         }
     }
+
+    $(function() {
+        new Button('#query', getList);
+        new Button('#download', () => {});
+    });
 
     let chart = null;
     function drawChart(element_id, data) {
@@ -112,11 +100,5 @@
                 resolve();
             });
         });
-        
     }
-
-    $(function() {
-        new Button('#query', getList);
-        new Button('#download', () => {});
-    });
 </script>
