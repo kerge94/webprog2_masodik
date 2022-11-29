@@ -21,4 +21,11 @@ class BaseController
             Router::redirect(ERROR_ACCESS_DENIED_PAGE);
         }
     }
+
+    protected function sendJSON(mixed $data): never
+    {
+        header("Content-Type: application/json; charset=UTF-8");
+        echo json_encode($data);
+        exit;
+    }
 }

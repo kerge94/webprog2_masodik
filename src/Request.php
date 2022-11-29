@@ -22,6 +22,11 @@ final class Request
         return $_REQUEST;
     }
 
+    public function getParam(string $key): ?string
+    {
+        return $_REQUEST[$key] ?? null;
+    }
+
     public function getStrippedURI(): string
     {
         $cleanedURI = strtok($this->getURI(), '?');

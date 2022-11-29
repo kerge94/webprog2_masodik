@@ -22,17 +22,18 @@ final class Database
         $this->connection->close();
     }    
 
-    public function query(string $query, string $types, array $params)
+    public function query(string $query, string $types = "", array $params = []): ?array
     {
         $stmt = $this->connection->prepare($query);
-        $stmt->bind_param($types, ...$params);
+        if (!empty($types) && count($params)) {
+            $stmt->bind_param($types, ...$params);
+        }
         $stmt->execute();
         $result = $stmt->get_result();
         if ($result !== false) {
             $data = $result->fetch_all(MYSQLI_ASSOC);
             return $data;
-        }        
-  
+        }
         if ($stmt->error) {
             throw new RuntimeException($stmt->error);
         }

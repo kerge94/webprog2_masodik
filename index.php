@@ -13,6 +13,8 @@ const ERROR_ACCESS_DENIED_PAGE = '/error/access_denied';
 
 const VIEW_FOLDER = 'src/Views/';
 
+const DEBUG_MODE = true;
+
 spl_autoload_register(function ($class) {
     $classPath = str_replace('\\', '/', $class);    
     $filePath =  __DIR__ . "/src/$classPath.php";
