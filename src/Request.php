@@ -2,9 +2,14 @@
 
 final class Request
 {
-    public function getHost(): string
+    private array $params;
+
+    public function __construct()
     {
-        return $_SERVER['HTTP_HOST'];
+        $this->params = $_REQUEST;
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true) ?? [];
+        $this->params = array_merge($_REQUEST, $data);
     }
 
     public function getURI(): string
@@ -17,14 +22,9 @@ final class Request
         return $_SERVER['REQUEST_METHOD'];
     }
 
-    public function getParams(): array
-    {
-        return $_REQUEST;
-    }
-
     public function getParam(string $key): ?string
     {
-        return $_REQUEST[$key] ?? null;
+        return $this->params[$key] ?? null;
     }
 
     public function getStrippedURI(): string

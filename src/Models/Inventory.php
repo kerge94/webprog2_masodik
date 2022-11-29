@@ -32,6 +32,7 @@ class Inventory
         $queryString = <<<QUERY
         select nev, count(telepites.szoftverid) as telepitesek from telepites
         inner join szoftver on telepites.szoftverid = szoftver.id
+        inner join gep on telepites.gepid = gep.id
         where telepites.datum between ? and ? and szoftver.kategoria = ?
         group by nev
         order by nev;

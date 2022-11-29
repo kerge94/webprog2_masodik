@@ -72,17 +72,22 @@
             const url = `${endpoint}${$('#resource').val()}`;
             const data = () => {
                 try {
-                    return JSON.parse($('#json').val());
+                    const json_string = $('#json').val();
+                    if (json_string) {
+                        return JSON.parse(json_string);
+                    }
                 }
-                catch {
-                    return {};
+                catch (e) {
+                    resolve();
+                    alert(e);
                 }
             };
-            
+
             $.ajax({
                 method: method,
                 url: url,
-                data: data
+                contentType: "application/json",
+                data: JSON.stringify(data())
             })
             .done(function(data, _, xhr) {
                 displayResponse(data);

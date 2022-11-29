@@ -29,4 +29,10 @@ class BaseController
         echo json_encode($data);
         exit;
     }
+
+    protected function getResourceId(): ?int
+    {
+        [,,$rest] = Router::splitURI($this->request->getStrippedURI());
+        return isset($rest[0]) ? (int)$rest[0] : null;
+    }
 }
