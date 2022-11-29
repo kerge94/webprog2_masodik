@@ -1,11 +1,11 @@
 <div class="row">
-    <div class="col">
+    <div class="col-md-10 offset-md-1">
         <div class="input-group mb-3">
             <label class="input-group-text" for="kezdo_datum">Kezdő dátum</label>
-            <input type="date" class="form-control me-2" id="kezdo_datum" name="kezdo_datum">
+            <input type="date" class="form-control me-2" id="kezdo_datum" name="kezdo_datum" value="<?= $start_date ?>">
 
             <label class="input-group-text" for="vegdatum">Végdátum</label>
-            <input type="date" class="form-control me-2" id="vegdatum" name="vegdatum">
+            <input type="date" class="form-control me-2" id="vegdatum" name="vegdatum" value="<?= $end_date ?>">
 
             <label class="input-group-text" for="kategoria">Kategória</label>
             <select class="form-select" id="kategoria" name="kategoria">
@@ -28,34 +28,95 @@
     </div>
 </div>
 
+<div id="result" class="row mt-3">
+    <div class="col-md-5 offset-md-1 table-wrapper d-none">
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Szoftver</th>
+                    <th scope="col">Telepítések száma</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-md-5">
+        <canvas id="chart" class="d-none"></canvas>
+    </div>
+</div>
+
 <script>
     class Button {
-        constructor(id, onClick) {
-            this.id = id;
-            this.elem = $(`#${id}`);
+        constructor(selector, on_click) {
+            this.selector = selector;
+            this.elem = $(selector);
             this.spinner = this.elem.find('.spinner');
-            $(`#${id}`).on('click', async () => {
+            $(selector).on('click', async () => {
                 this.elem.prop('disabled', true);
                 this.spinner.removeClass('d-none');
-                await onClick();
-                //this.spinner.hide();
+                await on_click();
                 this.spinner.addClass('d-none');
                 this.elem.prop('disabled', false);
             });
         }
     }
 
-    const fake_api = async function() {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-            console.log('lefutott');
-            resolve();
-            }, 1000);
+    class Table {
+        constructor(wrapper_selector) {
+            this.wrapper = $(wrapper_selector);
+        }
+        display(data) {
+            this.wrapper.addClass('d-none');
+            const table = this.wrapper.find('table');
+            const table_rows = data.map(row => {
+                return `<tr><td>${row.nev}</td><td>${row.telepitesek}</td></tr>`;
+            });
+            table.find('tbody').html(table_rows.join(''));
+            this.wrapper.removeClass('d-none');
+        }
+    }
+
+    let chart = null;
+    function drawChart(element_id, data) {
+        const ctx = document.getElementById(element_id);
+        $(ctx).removeClass('d-none');
+        chart?.destroy();
+        chart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: data.map(row => {const {nev} = row; return nev;}),
+                datasets: [{
+                    data: data.map(row => {const {telepitesek} = row; return telepitesek;}),
+                }]
+            }
         });
-    };
+    }
+
+    async function getList() {
+        const params = {
+            start_date: $('#kezdo_datum').val(),
+            end_date: $('#vegdatum').val(),
+            category: $('#kategoria').val()
+        };
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                method: "GET",
+                url: "/inventory/get_list",
+                data: params
+            })
+            .done(function(data) {
+                new Table('.table-wrapper').display(data);
+                drawChart('chart', data);
+                resolve();
+            });
+        });
+        
+    }
 
     $(function() {
-        const query = new Button('query', fake_api);
-        const download = new Button('download', fake_api);
+        new Button('#query', getList);
+        new Button('#download', () => {});
     });
 </script>
