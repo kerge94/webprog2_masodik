@@ -22,15 +22,30 @@ class Inventory extends BaseController
 
     public function get_list(): void
     {
-        $startDate = $this->request->getParam('start_date');
-        $endDate = $this->request->getParam('end_date');
+        $startDate = $this->formatDate(
+            $this->request->getParam('start_date')
+        );
+        $endDate = $this->formatDate(
+            $this->request->getParam('end_date')
+        );
         $category = $this->request->getParam('category');
+        $pdfResponse = $this->request->getParam('pdf');
+
         $result = InventoryModel::getList(
-            $this->formatDate($startDate),
-            $this->formatDate($endDate),
+            $startDate,
+            $endDate,
             $category
         );
-        $this->sendJSON($result);
+
+        if ($pdfResponse === null) {
+            $this->sendJSON($result);
+        }
+        else {
+            InventoryModel::generatePDF(
+                $result,
+                "$startDate - $endDate\n$category"
+            );
+        }
     }
 
     protected function formatDate(string $date): string

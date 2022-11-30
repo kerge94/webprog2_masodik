@@ -19,4 +19,17 @@
 
         </footer>
     </body>
+    <script>
+        class Button {
+            constructor(selector, on_click) {
+                this.selector = selector;
+                this.elem = $(selector);
+                $(selector).on('click', async (e) => {
+                    this.elem.prop('disabled', true);
+                    await on_click(e);
+                    this.elem.prop('disabled', false);
+                });
+            }
+        }
+    </script>
 </html>

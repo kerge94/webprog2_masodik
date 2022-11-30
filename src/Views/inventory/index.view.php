@@ -1,36 +1,47 @@
 <div class="row">
     <div class="col-md-10 offset-md-1">
-        <div class="input-group mb-3">
-            <label class="input-group-text" for="kezdo_datum">Kezdő dátum</label>
-            <input type="date" class="form-control me-2" id="kezdo_datum" name="kezdo_datum" value="<?= $start_date ?>">
-
-            <label class="input-group-text" for="vegdatum">Végdátum</label>
-            <input type="date" class="form-control me-2" id="vegdatum" name="vegdatum" value="<?= $end_date ?>">
-
-            <label class="input-group-text" for="kategoria">Kategória</label>
-            <select class="form-select" id="kategoria" name="kategoria">
-                <option selected>Válasszon egyet...</option>
-                <?php foreach($software_categories as $categoryArray): ?>
-                    <?php $category = $categoryArray['kategoria']; ?>
-                    <option value="<?= $category ?>"><?= $category ?></option>
-                <?php endforeach; ?>
-            </select>
-
-            <button id="query" class="mx-3 btn btn-primary">
-                Lekérdezés
-                <span class="spinner spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-            </button>
-            <button id="download" class="btn btn-secondary">
-                Pdf letöltése
-                <span class="spinner spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-            </button>
+        <div class="row g-2">
+            <div class="col-xl-3 col-lg-6">
+                <div class="input-group">
+                    <label class="input-group-text" for="kezdo_datum">Kezdő dátum</label>
+                    <input type="date" class="form-control" id="kezdo_datum" name="kezdo_datum" value="<?= $start_date ?>">
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6">
+                <div class="input-group">
+                    <label class="input-group-text" for="vegdatum">Végdátum</label>
+                    <input type="date" class="form-control" id="vegdatum" name="vegdatum" value="<?= $end_date ?>">
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6">
+                <div class="input-group">
+                    <label class="input-group-text" for="kategoria">Kategória</label>
+                    <select class="form-select" id="kategoria" name="kategoria">
+                        <option selected>Válasszon egyet...</option>
+                        <?php foreach($software_categories as $categoryArray): ?>
+                            <?php $category = $categoryArray['kategoria']; ?>
+                            <option value="<?= $category ?>"><?= $category ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6">
+                <div class="d-flex">
+                    <button id="query" class="btn btn-primary me-2">
+                        Lekérdezés
+                    </button>
+                    <a id="download" class="btn btn-secondary" target="_blank" href="">
+                        PDF letöltése
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<div id="result" class="row mt-3">
+<div id="result" class="row mt-5">
     <div class="col-md-5 offset-md-1 table-wrapper d-none">
-        <table class="table table-striped">
+        <table class="table table-striped table-hover">
             <thead class="thead-dark">
                 <tr>
                     <th scope="col">Szoftver</th>
@@ -48,21 +59,6 @@
 </div>
 
 <script>
-    class Button {
-        constructor(selector, on_click) {
-            this.selector = selector;
-            this.elem = $(selector);
-            this.spinner = this.elem.find('.spinner');
-            $(selector).on('click', async () => {
-                this.elem.prop('disabled', true);
-                this.spinner.removeClass('d-none');
-                await on_click();
-                this.spinner.addClass('d-none');
-                this.elem.prop('disabled', false);
-            });
-        }
-    }
-
     class Table {
         constructor(wrapper_selector) {
             this.wrapper = $(wrapper_selector);
@@ -76,6 +72,19 @@
             table.find('tbody').html(table_rows.join(''));
             this.wrapper.removeClass('d-none');
         }
+    }
+
+    $(function() {
+        new Button('#query', getList);
+        new Button('#download', createPDF);
+    });
+
+    function getParams() {
+        return {
+            start_date: $('#kezdo_datum').val(),
+            end_date: $('#vegdatum').val(),
+            category: $('#kategoria').val()
+        };
     }
 
     let chart = null;
@@ -95,11 +104,7 @@
     }
 
     async function getList() {
-        const params = {
-            start_date: $('#kezdo_datum').val(),
-            end_date: $('#vegdatum').val(),
-            category: $('#kategoria').val()
-        };
+        const params = getParams();
         return new Promise((resolve, reject) => {
             $.ajax({
                 method: "GET",
@@ -112,11 +117,10 @@
                 resolve();
             });
         });
-        
     }
 
-    $(function() {
-        new Button('#query', getList);
-        new Button('#download', () => {});
-    });
+    async function createPDF(e) {
+        const url_params = new URLSearchParams({...getParams(), pdf: true});
+        e.originalEvent.currentTarget.href = `/inventory/get_list?${url_params.toString()}`;
+    }
 </script>

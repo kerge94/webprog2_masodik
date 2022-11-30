@@ -22,7 +22,7 @@ final class Database
         $this->connection->close();
     }    
 
-    public function query(string $query, string $types = "", array $params = []): ?array
+    public function query(string $query, string $types = "", array $params = []): int|array
     {
         $stmt = $this->connection->prepare($query);
         if (!empty($types) && count($params)) {
@@ -37,5 +37,6 @@ final class Database
         if ($stmt->error) {
             throw new RuntimeException($stmt->error);
         }
+        return $this->connection->insert_id;
     }
 }
