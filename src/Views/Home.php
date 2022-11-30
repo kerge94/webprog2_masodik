@@ -1,3 +1,1 @@
-<h3>Hello from home view</h3>
-
-<?= $test_variable ?>
+<h3>Üdvözöljük cégünk weboldalán. Olvasson, használja, élvezze.</h3>
